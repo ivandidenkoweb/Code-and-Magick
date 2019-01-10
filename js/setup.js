@@ -66,6 +66,8 @@ drawWizards(wizardsElements);
 var similarWizards = document.querySelector('.setup-similar');
 similarWizards.classList.remove('hidden');
 
+///////////////////////////////////////////////
+
 var onPopupEscPress = function(evt){
   if (evt.keyCode === 27){
     closePopup();
@@ -125,3 +127,5 @@ mainWizardEyes.addEventListener('click', function(){
 mainFireballWrap.addEventListener('click', function(){
   mainFireballWrap.style.backgroundColor = fireballColors[getRandomNumber(fireballColors.length)];
 });
+
+
