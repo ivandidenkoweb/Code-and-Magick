@@ -25,7 +25,7 @@
     var wizards = [];
     for(var i = 0; i < howManyWizads; i++){
       var randomName;
-      // Делаем так, чтобы имя и фамилия случайным порядком менялись местами
+      // Имя и фамилия случайным порядком меняються местами
       if(Math.round(Math.random())){
         randomName = firstNames[window.getRandomNumber(firstNames.length)] +  ' ' + secondNames[window.getRandomNumber(secondNames.length)];
       } else {
