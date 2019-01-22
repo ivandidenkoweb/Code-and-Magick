@@ -134,4 +134,18 @@
     addDragListeners(artifactsCells[i])
   };
 
+  var form = document.querySelector('.setup-wizard-form');
+
+  form.addEventListener('submit', function(evt){
+    window.backend.save(new FormData(form), function(response){
+      console.log(response);
+      alert('Данные успешно отправлены');
+      window.popupSetupWizard.setup.classList.add('hidden');
+    }, function(string){
+      console.log(string);
+      alert(string);
+    });
+    evt.preventDefault();
+  });
+
 })();

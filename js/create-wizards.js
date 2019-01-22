@@ -42,32 +42,35 @@
 
   var wizards = getWizards(firstNames, secondNames, coatColors, eyesColors, howManyWizads);
 
-  // Функция, которая возвращает массив из волшебников созданных с помощю шаблона #similar-wizard-template, где wizards это массив волшебников
-  var createWizards = function(wizards){
+  // Функция для создания и отрисовки волшебников
+  var createAndDrawWizards = function(wizards){
     var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
     var DOMWizards = [];
-    for(var i = 0; i < wizards.length; i++){
+
+    for(var i = 0; i < howManyWizads; i++){
       var wizardElement = similarWizardTemplate.cloneNode(true);
-      wizardElement.querySelector('.setup-similar-label').textContent = wizards[i].name;
-      wizardElement.querySelector('.wizard-coat').style.fill = wizards[i].coatColor;
-      wizardElement.querySelector('.wizard-eyes').style.fill = wizards[i].eyesColor;
+      var k = window.getRandomNumber(wizards.length - 1);
+      wizardElement.querySelector('.setup-similar-label').textContent = wizards[k].name;
+      wizardElement.querySelector('.wizard-coat').style.fill = wizards[k].colorCoat;
+      wizardElement.querySelector('.wizard-eyes').style.fill = wizards[k].colorEyes;
       DOMWizards[i] = wizardElement;
     };
-    return DOMWizards;
-  };
-
-  var DOMWizards = createWizards(wizards);
-
-  // Функция для отрисовки DOM-шаблонов DOMWizards волшебников
-  var drawWizards = function(DOMWizards){
+    
     var similarList = document.querySelector('.setup-similar-list');
     var fragment = document.createDocumentFragment();
-    for(var i = 0; i < DOMWizards.length; i++){
-      fragment.appendChild(DOMWizards[i]);
+
+    for(var j = 0; j < DOMWizards.length; j++){
+      fragment.appendChild(DOMWizards[j]);
     };
     similarList.appendChild(fragment);
   };
 
-  drawWizards(DOMWizards);
+  window.backend.load(function(response){
+    createAndDrawWizards(response);
+  }, function(string){
+    alert(string);
+  });
+
+
   document.querySelector('.setup-similar').classList.remove('hidden');
 })();
