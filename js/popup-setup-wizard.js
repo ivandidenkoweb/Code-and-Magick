@@ -4,16 +4,10 @@
   var setupOpen = document.querySelector('.setup-open-icon');
   var setupClose = document.querySelector('.setup-close');
   var setupUserName = document.querySelector('.setup-user-name');
-  var mainWizardCoat = document.querySelector('.wizard-coat');
-  var mainWizardEyes = document.querySelector('.wizard-eyes');
-  var mainFireballWrap = document.querySelector('.setup-fireball-wrap');
   var shop = document.querySelector('.setup-artifacts-shop');
   var shopItems = shop.querySelectorAll('img');
   var playerArtifacts = document.querySelector('.setup-artifacts');
   var artifactsCells = playerArtifacts.querySelectorAll('.setup-artifacts-cell');
-  var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-  var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
-  var fireballColors = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
   window.popupSetupWizard = {
     ESCKEYCODE : 27,
@@ -73,19 +67,6 @@
     document.addEventListener('keydown', onPopupEscPress);
   });
 
-  // Изменение цвета мантии, глаз, фаерболла по нажатию мышки на случайный
-  mainWizardCoat.addEventListener('click', function(){
-    mainWizardCoat.style.fill = coatColors[window.getRandomNumber(coatColors.length)];
-  });
-
-  mainWizardEyes.addEventListener('click', function(){
-    mainWizardEyes.style.fill = eyesColors[window.getRandomNumber(eyesColors.length)];
-  });
-
-  mainFireballWrap.addEventListener('click', function(){
-    mainFireballWrap.style.backgroundColor = fireballColors[window.getRandomNumber(fireballColors.length)];
-  });
-
   //Настройка сценария Drag'n'Drop артефактов
   var dragElement;
 
@@ -138,11 +119,9 @@
 
   form.addEventListener('submit', function(evt){
     window.backend.save(new FormData(form), function(response){
-      console.log(response);
       alert('Данные успешно отправлены');
       window.popupSetupWizard.setup.classList.add('hidden');
     }, function(string){
-      console.log(string);
       alert(string);
     });
     evt.preventDefault();
