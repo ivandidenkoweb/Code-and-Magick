@@ -1,131 +1,88 @@
-var setup = document.querySelector('.setup');
-var setupOpen = document.querySelector('.setup-open-icon');
-var setupClose = document.querySelector('.setup-close');
-var setupUserName = document.querySelector('.setup-user-name');
-var mainWizardCoat = document.querySelector('.wizard-coat');
-var mainWizardEyes = document.querySelector('.wizard-eyes');
-var mainFireballWrap = document.querySelector('.setup-fireball-wrap');
+// Модуль отрисовки магов
 
-var firstNames = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var secondNames = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
-var howManyObj = 4;
-var fireballColors = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+(function () {
+    //  функция создания DOM-элемента на основе JS-объекта
 
-var getRandomNumber = function(maxNumber){
-    return Math.floor(Math.random() * maxNumber);
-  };
+    var wizards = null;
 
-var getRandomData = function(firstNames, secondNames, coatColors, eyesColors, howManyObj){
-  var randomData = [];
-  for(var i = 0; i < howManyObj; i++){
-    var randomName = null;
-    if(Math.round(Math.random())){
-      randomName = firstNames[getRandomNumber(firstNames.length)] +  ' ' + secondNames[getRandomNumber(secondNames.length)];
-    } else {
-      randomName = secondNames[getRandomNumber(secondNames.length)] +  ' ' + firstNames[getRandomNumber(firstNames.length)];
-    }
-    randomData[i] = {
-      name: randomName,
-      coatColor: coatColors[getRandomNumber(coatColors.length)],
-      eyesColor: eyesColors[getRandomNumber(eyesColors.length)]
+    var createWizard = function (wizard) {
+        var similarWizardTemplate = document.querySelector('#similar-wizard-template')
+            .content
+            .querySelector('.setup-similar-item');
+        var wizardElement = similarWizardTemplate.cloneNode(true);
+
+        wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+        wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+        wizardElement.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
+
+        return wizardElement;
     };
-  };
-  return randomData;
-};
 
-var wizards = getRandomData(firstNames, secondNames, coatColors, eyesColors, howManyObj);
-var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+    // функция заполнения блока DOM-элементами на основе массива JS-объектов
 
-var createWizards = function(wizards){
-  var wizardsElements = [];
-  for(var i = 0; i < wizards.length; i++){
-    var wizardElement = similarWizardTemplate.cloneNode(true);
-    wizardElement.querySelector('.setup-similar-label').textContent = wizards[i].name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizards[i].coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizards[i].eyesColor;
-    wizardsElements[i] = wizardElement;
-  };
-  return wizardsElements;
-};
+    var renderWizards = function (wizards) {
+        var similarListElement = document.querySelector('.setup-similar-list');
+        similarListElement.innerHTML = '';
+        var fragment = document.createDocumentFragment();
+        for (var i = 0; i < 4; i++) {
+            fragment.appendChild(createWizard(wizards[i]));
+        }
+        similarListElement.appendChild(fragment);
+    };
 
-var wizardsElements = createWizards(wizards);
-var similarListElement = document.querySelector('.setup-similar-list');
+    // Обновление волшебников
 
-var drawWizards = function(wizardsElements){
-  var fragment = document.createDocumentFragment();
-  for(var i = 0; i < wizardsElements.length; i++){
-    fragment.appendChild(wizardsElements[i]);
-  };
-  similarListElement.appendChild(fragment);
-};
+    var getRank = function (wizard) {
+        var rank = 0;
 
-drawWizards(wizardsElements);
+        if (wizard.colorCoat === window.coatColor) {
+            rank += 2;
+        }
+        if (wizard.colorEyes === window.eyesColor) {
+            rank += 1;
+        }
+        return rank;
+    };
 
-var similarWizards = document.querySelector('.setup-similar');
-similarWizards.classList.remove('hidden');
+    var namesComparator = function (left, right) {
+      if (left > right) {
+          return 1;
+      } else if (left < right) {
+          return -1;
+      } else {
+          return 0;
+      }
+    };
 
-///////////////////////////////////////////////
+    window.updateWizards = function () {
+        wizards = wizards.slice().sort(function (left, right) {
+            var rankDiff = getRank(right) - getRank(left);
+            if (rankDiff === 0) {
+                rankDiff = namesComparator(left.name, right.name);
+            }
+            return rankDiff;
+        });
+        renderWizards(wizards);
+    };
 
-var onPopupEscPress = function(evt){
-  if (evt.keyCode === 27){
-    closePopup();
-  };
-};
+    var onLoad = function (data) {
+        wizards = data;
+        renderWizards(wizards);
+    };
 
-var openPopup = function(){
-  setup.classList.remove('hidden');
-  document.addEventListener('keydown',
-   onPopupEscPress);
-};
+    window.onError = function (errorMessage) {
+        var node = document.createElement('div');
 
-var closePopup = function(){
-  setup.classList.add('hidden');
-  document.removeEventListener('keydown',
-   onPopupEscPress);
-};
+        node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+        node.style.position = 'absolute';
+        node.style.left = 0;
+        node.style.right = 0;
+        node.style.fontSize = '30px';
 
-setupOpen.addEventListener('click', function(){
-  openPopup();
-});
+        node.textContent = errorMessage;
+        document.body.insertAdjacentElement('afterbegin', node);
+    };
 
-setupOpen.addEventListener('keydown', function(evt){
-  if(evt.keyCode === 13){
-  openPopup();
-  };
-});
+    window.backend.load(onLoad, window.onError);
 
-setupClose.addEventListener('click', function(){
-  closePopup();
-});
-
-setupClose.addEventListener('keydown', function(evt){
-  if(evt.keyCode === 13){
-  closePopup();
-  };
-});
-
-setupUserName.onfocus = function(){
-  document.removeEventListener('keydown',
-   onPopupEscPress);
-};
-
-setupUserName.onblur = function(){
-  document.addEventListener('keydown',
-   onPopupEscPress);
-};
-
-mainWizardCoat.addEventListener('click', function(){
-  mainWizardCoat.style.fill = coatColors[getRandomNumber(coatColors.length)];
-});
-
-mainWizardEyes.addEventListener('click', function(){
-  mainWizardEyes.style.fill = eyesColors[getRandomNumber(eyesColors.length)];
-});
-
-mainFireballWrap.addEventListener('click', function(){
-  mainFireballWrap.style.backgroundColor = fireballColors[getRandomNumber(fireballColors.length)];
-});
-
-
+})();

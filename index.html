@@ -68,9 +68,10 @@
 </header>
 
 <div class="overlay setup hidden">
-  <form class="setup-wizard-form" 
+  <form class="setup-wizard-form"
         method="post"
         enctype="multipart/form-data"
+        action="https://js.dump.academy/code-and-magick"
         autocomplete="off">
 
     <div class="setup-title">
@@ -81,8 +82,7 @@
         </div>
         <label>
           <input type="text" name="username"
-                minlength="2" 
-                 maxlength="25" required
+                 minlength="2" maxlength="25" required
                  class="setup-user-name" value="Синий Пендальф"/>
         </label>
       </div>
@@ -110,7 +110,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 86" class="setup-wizard">
             <g class="wizard">
               <use xlink:href="#wizard-coat" class="wizard-coat" style="fill: #6589a4"></use>
-              <use xlink:href="#wizard-head" class="wizard-head" style="fill: black"></use>
+              <use xlink:href="#wizard-head" class="wizard-head"></use>
               <use xlink:href="#wizard-eyes" class="wizard-eyes"></use>
               <use xlink:href="#wizard-hands" class="wizard-hands"></use>
             </g>
@@ -163,7 +163,7 @@
 
 <footer>
   <p><a href="http://htmlacademy.ru" class="footer-link"><img src="img/htmlacademy-logo.png" alt="HTML Academy"
-      width="130">Сделано в HTML Academy</a>в 2017 году</p>
+                                                              width="130">Сделано в HTML Academy</a>в 2017 году</p>
 </footer>
 
 <template id="similar-wizard-template" style="display: none">
@@ -184,30 +184,33 @@
 
 <script>
   var fireballSize = 22;
-  var getFireballSped = function(left) {
-    return left ? 5 : 2; 
+  var getFireballSpeed = function(left){
+    return (left ? 5 : 2);
   };
   var wizardSpeed = 3;
   var wizardWidth = 70;
-  var getWizardHeight = function() {
+  var getWizardHeight = function(){
     return 1.337 * wizardWidth;
   };
-  var getWizardX = function(width) {
-    var WizardX = width / 2 - wizardWidth / 2;
-    return WizardX;
+  var getWizardX = function(width){
+    return Math.floor((width / 2) - (wizardWidth / 2));
   };
-    var getWizardY = function(height) {
-    var WizardY = height - (height * 2 / 3);
-    return WizardY;
+  var getWizardY = function(height){
+    return Math.floor(((height / 3) * 2) - getWizardHeight());
   };
 </script>
-<script src="js/debounce.js"></script>
-<script src="js/backend.js"></script>
-<script src="js/create-wizards.js"></script>
-<script src="js/popup-setup-wizard.js"></script>
-<script src="js/dialog.js"></script>
 <script src="js/stat.js"></script>
+
 <script src="js/game.js"></script>
 
+<script src="js/util.js"></script>
+<script src="js/debounce.js"></script>
+<script src="js/backend.js"></script>
+<script src="js/setup.js"></script>
+<script src="js/dialog.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/colorize.js"></script>
+<script src="js/dragndrop.js"></script>
+<script src="js/avatar.js"></script>
 </body>
 </html>

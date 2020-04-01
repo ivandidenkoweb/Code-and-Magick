@@ -1,59 +1,47 @@
-// Модуль для работы с сервером
+(function () {
+    var URL_POST = 'https://js.dump.academy/code-and-magick';
+    var URL_GET = 'https://js.dump.academy/code-and-magick/data';
 
-(function(){
-    var backendLoad = function (onLoad, onError) {
-    var URL = 'https://js.dump.academy/code-and-magick/data';
-    var xhr = new XMLHttpRequest();
-    xhr.timeout = 10000;
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-
-        onLoad(xhr.response);
-      } else {
-        onError('Ошибка');
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.open('GET', URL);
-    xhr.send();
-  };
-
-  var backendSave = function (data, onLoad, onError) {
-    var URL = 'https://js.dump.academy/code-and-magick';
-    var xhr = new XMLHttpRequest();
-    xhr.timeout = 10000;
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onLoad(xhr.response);
-      } else {
-        onError('Ошибка');
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.open('POST', URL);
-    xhr.send(data);
-  };
-
-  window.backend = {
-    load: backendLoad,
-    save: backendSave
-  };
-
+    window.backend = {
+        load: function (onLoad, onError) {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'json';
+    
+            xhr.addEventListener('load', function () {
+                if(xhr.status === 200) {
+                    onLoad(xhr.response);
+                } else {
+                    onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+                }
+            });
+    
+            xhr.addEventListener('error', function () {
+                onError('Произошла ошибка соединения');
+            });
+    
+            xhr.addEventListener('timeout', function () {
+                onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+            });
+    
+            xhr.timeout = 10000;
+    
+            xhr.open('GET', URL_GET);
+            xhr.send();
+        },
+        save: function (data, onLoad, onError) {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'json';
+    
+            xhr.addEventListener('load', function () {
+                if(xhr.status === 200) {
+                    onLoad(xhr.response);
+                } else {
+                    onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+                }
+            });
+    
+            xhr.open('POST', URL_POST);
+            xhr.send(data);
+        }
+    };
 })();
